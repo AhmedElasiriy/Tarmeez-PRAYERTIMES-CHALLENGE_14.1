@@ -1,101 +1,135 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PrayerTimes Challenge</title>
-    <style>
-      body {
-        background-color: rgb(30, 0, 60);
-      }
-      .container {
-        color: white;
-      }
-      #city {
-        font-size: 100px;
-      }
-      #prayeTimes {
-        display: flex;
-        justify-content: space-around;
-        margin: 40px;
-      }
-      #prayeTimes div div {
-        background-color: blueviolet;
-        font-size: 20px;
-      }
-      #prayeTimes div {
-        padding: 5px 20px 20px;
-        background-color: aqua;
-      }
-      #T {
-        background-color: aqua;
-      }
-      #cities select {
-        margin: 50px 30px;
-        font-size: 50px;
-      }
-    </style>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div id="city">Cairo</div>
-      <div>
-        <hr />
-        <p id="date" style="font-size: 20px">sep 2022 23 الجمعة</p>
-        <hr />
-      </div>
-      <div id="prayeTimes">
-        <div id="Isha">
-          <div>العشاء</div>
-          <h1>8:32</h1>
-        </div>
-        <div id="Maghrib">
-          <div>المغرب</div>
-          <h1>7:00</h1>
-        </div>
-        <div id="Asr">
-          <div>العصر</div>
-          <h1>5:34</h1>
-        </div>
-        <div id="Dhuhr">
-          <div>الظهر</div>
-          <h1>2:43</h1>
-        </div>
-        <div id="Sunrise">
-          <div>الشروق</div>
-          <h1>5:23</h1>
-        </div>
-        <div id="Fajr">
-          <div>الفجر</div>
-          <h1>4:12</h1>
-        </div>
-      </div>
 
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PrayerTimes Challenge</title>
+  <style>
+    body {
+      background-color: rgb(30, 0, 60);
+    }
+
+    .container {
+      color: white;
+    }
+
+    #city {
+      font-size: 100px;
+    }
+
+    #prayeTimes {
+      display: flex;
+      justify-content: space-around;
+      margin: 40px;
+    }
+
+    #prayeTimes div div {
+      background-color: blueviolet;
+      font-size: 20px;
+    }
+
+    #prayeTimes div {
+      padding: 5px 20px 20px;
+      background-color: aqua;
+    }
+
+    #T {
+      background-color: aqua;
+    }
+
+    #cities select {
+      margin: 50px 30px;
+      font-size: 50px;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+  <div class="container">
+    <div id="city">Cairo</div>
+    <div>
       <hr />
-
-      <div id="cities">
-        <select name="city" id="citiesList">
-          <option value="Cairo">Cairo</option>
-          <option value="Alexandria">Alexandria</option>
-          <option value="Quena">Quena</option>
-        </select>
+      <p id="date" style="font-size: 20px">sep 2022 23 الجمعة</p>
+      <hr />
+    </div>
+    <div id="prayeTimes">
+      <div id="Isha">
+        <div>العشاء</div>
+        <h1>8:32</h1>
+      </div>
+      <div id="Maghrib">
+        <div>المغرب</div>
+        <h1>7:00</h1>
+      </div>
+      <div id="Asr">
+        <div>العصر</div>
+        <h1>5:34</h1>
+      </div>
+      <div id="Dhuhr">
+        <div>الظهر</div>
+        <h1>2:43</h1>
+      </div>
+      <div id="Sunrise">
+        <div>الشروق</div>
+        <h1>5:23</h1>
+      </div>
+      <div id="Fajr">
+        <div>الفجر</div>
+        <h1>4:12</h1>
       </div>
     </div>
 
-    <script>
-      let select = document.getElementById("citiesList");
+    <hr />
 
-      let date = document.getElementById("date");
-      date.innerHTML = new Date().toString().slice(0, 15);
+    <div id="cities">
+      <select name="city" id="citiesList">
+        <option value="Cairo">Cairo</option>
+        <option value="Alexandria">Alexandria</option>
+        <option value="Quena">Quena</option>
+      </select>
+    </div>
+  </div>
+
+  <script>
+    let select = document.getElementById("citiesList");
+
+    let date = document.getElementById("date");
+    date.innerHTML = new Date().toString().slice(0, 15);
+
+    axios
+      .get(
+        `http://api.aladhan.com/v1/calendarByCity?city=${select.value
+        }&country=Egypt&method=5&month=${new Date().getMonth() + 1}&year=${new Date().getUTCFullYear
+        }`
+      )
+      .then((result) => {
+        document.querySelector("#Fajr h1").innerHTML =
+          result.data.data[new Date().getDate()].timings.Fajr;
+        document.querySelector("#Sunrise h1").innerHTML =
+          result.data.data[new Date().getDate()].timings.Sunrise;
+        document.querySelector("#Dhuhr h1").innerHTML =
+          result.data.data[new Date().getDate()].timings.Dhuhr;
+        document.querySelector("#Asr h1").innerHTML =
+          result.data.data[new Date().getDate()].timings.Asr;
+        document.querySelector("#Maghrib h1").innerHTML =
+          result.data.data[new Date().getDate()].timings.Maghrib;
+        document.querySelector("#Isha h1").innerHTML =
+          result.data.data[new Date().getDate()].timings.Isha;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    select.addEventListener("click", function (e) {
+      document.getElementById("city").innerHTML = select.value;
 
       axios
         .get(
-          `http://api.aladhan.com/v1/calendarByCity?city=${
-            select.value
-          }&country=Egypt&method=5&month=${new Date().getMonth() + 1}&year=${
-            new Date().getUTCFullYear
+          `http://api.aladhan.com/v1/calendarByCity?city=${select.value
+          }&country=Egypt&method=5&month=${new Date().getMonth() + 1}&year=${new Date().getUTCFullYear
           }`
         )
         .then((result) => {
@@ -115,36 +149,8 @@
         .catch((error) => {
           console.log(error);
         });
+    });
+  </script>
+</body>
 
-      select.addEventListener("click", function (e) {
-        document.getElementById("city").innerHTML = select.value;
-
-        axios
-          .get(
-            `http://api.aladhan.com/v1/calendarByCity?city=${
-              select.value
-            }&country=Egypt&method=5&month=${new Date().getMonth() + 1}&year=${
-              new Date().getUTCFullYear
-            }`
-          )
-          .then((result) => {
-            document.querySelector("#Fajr h1").innerHTML =
-              result.data.data[new Date().getDate()].timings.Fajr;
-            document.querySelector("#Sunrise h1").innerHTML =
-              result.data.data[new Date().getDate()].timings.Sunrise;
-            document.querySelector("#Dhuhr h1").innerHTML =
-              result.data.data[new Date().getDate()].timings.Dhuhr;
-            document.querySelector("#Asr h1").innerHTML =
-              result.data.data[new Date().getDate()].timings.Asr;
-            document.querySelector("#Maghrib h1").innerHTML =
-              result.data.data[new Date().getDate()].timings.Maghrib;
-            document.querySelector("#Isha h1").innerHTML =
-              result.data.data[new Date().getDate()].timings.Isha;
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      });
-    </script>
-  </body>
 </html>
